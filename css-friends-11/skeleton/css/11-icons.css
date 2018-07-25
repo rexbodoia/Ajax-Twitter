@@ -1,0 +1,7 @@
+/* PHASE 11: Icons */
+.icon-wall {
+  background-image: url('../images/sprite.png');
+  background-size: 25px;
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+}
