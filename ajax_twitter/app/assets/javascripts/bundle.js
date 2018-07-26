@@ -86,14 +86,107 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./frontend/follow_toggle.js":
+/*!***********************************!*\
+  !*** ./frontend/follow_toggle.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const APIUtil = __webpack_require__(/*! ./util_api.js */ "./frontend/util_api.js");
+
+class FollowToggle {
+  constructor($el){
+    this.el = $el;
+    this.userId = $el.data("id");
+    this.followstate = $el.data("followstate");
+    this.render();
+    this.handleClick();
+  }
+  
+  render(){
+    let text;
+    if (this.followstate === 'unfollowed'){
+      text = 'Follow!';
+    } else {
+      text = 'Unfollow!';
+    }
+    this.el.text(text);
+  }
+  
+  handleClick(){
+    this.el.on('click', e => {      
+      e.preventDefault();
+      if (this.followstate === 'unfollowed'){
+        console.log(this.userId);
+        APIUtil.followUser(this.userId);
+      }
+      else{
+        APIUtil.unfollowUser(this.userId);
+      }
+    });
+  }
+}
+
+module.exports = FollowToggle;
+
+
+/***/ }),
+
 /***/ "./frontend/twitter.js":
 /*!*****************************!*\
   !*** ./frontend/twitter.js ***!
   \*****************************/
 /*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const FollowToggle = __webpack_require__(/*! ./follow_toggle.js */ "./frontend/follow_toggle.js");
+
+$( () => {
+  $('button.follow-toggle').each( (idx, el) => {
+    new FollowToggle($(el));
+  });
+});
+
+/***/ }),
+
+/***/ "./frontend/util_api.js":
+/*!******************************!*\
+  !*** ./frontend/util_api.js ***!
+  \******************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
+const APIUtil = {
+  followUser: id => {
+    $.ajax({
+      type: 'POST',
+      url: `/users/${id}/follow`,
+      dataType: 'JSON',
+      success(data){
+        console.log('whaddduppp');
+      },
+      error(){
+        console.log('did not work');
+      },
+    });
+  },
+  unfollowUser: id => {
+    $.ajax({
+      type: 'DELETE',
+      url: `/users/${id}/follow`,
+      dataType: 'JSON',
+      success(data){
+        console.log('whaddduppp');
+      },
+      error(){
+        console.log('did not work');
+      },
+    });
+  }
+};
 
+module.exports = APIUtil;
 
 /***/ })
 
